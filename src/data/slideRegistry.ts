@@ -3,6 +3,7 @@ import DiagnosticoSlide from "@/slides/DiagnosticoSlide";
 import MigrationModelsSlide from "@/slides/MigrationModelsSlide";
 import ArchitectureSlide2 from "@/slides/ArchitectureSlide2";
 import ClosingSlide from "@/slides/ClosingSlide";
+import ArchitectureSlide1 from "@/slides/ArchitectureSlide1";
 
 export const slides: SlideData[] = [
   { 
@@ -24,7 +25,7 @@ export const slides: SlideData[] = [
     title: "Arquitetura Proposta", 
     section: "Justificativa", // Aparecerá como o 3º item no menu
     speakerNotes: "", 
-    component: ArchitectureSlide2 
+    component: ArchitectureSlide1 
   },
   { 
     id: "conclusao", 
