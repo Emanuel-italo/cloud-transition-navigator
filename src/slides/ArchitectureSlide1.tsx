@@ -1,89 +1,115 @@
-import React, { useState } from "react";
+import React from "react";
 import ScaledSlide from "@/components/ScaledSlide";
-
-const layers = [
-  { id: "cdn", label: "CDN / CloudFront", y: 20, color: "var(--slide-warning)", desc: "Edge caching global, TLS termination" },
-  { id: "waf", label: "WAF + Shield", y: 90, color: "var(--slide-danger)", desc: "Proteção DDoS, regras PCI-DSS" },
-  { id: "alb", label: "ALB / API Gateway", y: 160, color: "var(--slide-primary)", desc: "Load balancing, rate limiting, auth" },
-  { id: "app", label: "Auto Scaling Group (ECS/EKS)", y: 240, color: "var(--slide-accent)", desc: "Containers, auto-scaling 2-50 instâncias" },
-  { id: "cache", label: "ElastiCache (Redis)", y: 320, color: "var(--slide-purple)", desc: "Cache de sessão, rate limiting, < 1ms" },
-  { id: "db", label: "RDS PostgreSQL Multi-AZ", y: 400, color: "var(--slide-primary)", desc: "Failover automático, backup contínuo" },
-  { id: "storage", label: "S3 + Glacier", y: 480, color: "var(--slide-warning)", desc: "Documentos, logs, compliance archives" },
-  { id: "monitoring", label: "CloudWatch + Prometheus + SIEM", y: 550, color: "var(--slide-accent)", desc: "Observabilidade, alertas, audit trail" },
-];
+import { GraduationCap, TrendingUp, Target, Scale, Zap, ShieldCheck, Clock, Lightbulb } from "lucide-react";
 
 const ArchitectureSlide1: React.FC = () => {
-  const [highlighted, setHighlighted] = useState<string | null>(null);
-
   return (
     <ScaledSlide>
       <div className="h-full flex flex-col">
         <div className="mb-6">
-          <p className="text-sm font-semibold text-primary uppercase tracking-widest mb-2">Arquitetura</p>
-          <h2 className="slide-title text-4xl">Opção 1 — Híbrido com Burst para Cloud</h2>
-          <p className="slide-subtitle mt-1">Workloads sensíveis on-prem + cloud para scaling em picos</p>
-        </div>
-        <div className="flex gap-8 flex-1">
-          <div className="flex-1">
-            <svg viewBox="0 0 800 620" className="w-full h-full">
-              {/* Background regions */}
-              <rect x="20" y="10" width="370" height="600" rx="12" fill="hsl(200, 80%, 55%, 0.05)" stroke="hsl(200, 80%, 55%, 0.2)" strokeDasharray="4 4" />
-              <text x="205" y="40" textAnchor="middle" fill="hsl(200, 80%, 55%)" fontSize="14" fontWeight="600">AWS Cloud (sa-east-1)</text>
-              
-              <rect x="410" y="10" width="370" height="600" rx="12" fill="hsl(38, 92%, 55%, 0.05)" stroke="hsl(38, 92%, 55%, 0.2)" strokeDasharray="4 4" />
-              <text x="595" y="40" textAnchor="middle" fill="hsl(38, 92%, 55%)" fontSize="14" fontWeight="600">Datacenter Local</text>
-              
-              {layers.map((l) => (
-                <g key={l.id}
-                  onMouseEnter={() => setHighlighted(l.id)}
-                  onMouseLeave={() => setHighlighted(null)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <rect
-                    x="40" y={l.y + 50} width="330" height="50" rx="8"
-                    fill={highlighted === l.id ? `hsl(${l.color}, 0.2)` : `hsl(${l.color}, 0.08)`}
-                    stroke={`hsl(${l.color}, ${highlighted === l.id ? 0.8 : 0.3})`}
-                    strokeWidth={highlighted === l.id ? 2 : 1}
-                  />
-                  <text x="55" y={l.y + 80} fill="hsl(210, 20%, 92%)" fontSize="13" fontWeight="500">{l.label}</text>
-                </g>
-              ))}
-              
-              {/* On-prem boxes */}
-              {["Core Bancário", "HSM / KMS", "AD / LDAP", "Firewall Fortigate"].map((item, i) => (
-                <g key={item}>
-                  <rect x="430" y={80 + i * 80} width="330" height="55" rx="8" fill="hsl(38, 92%, 55%, 0.08)" stroke="hsl(38, 92%, 55%, 0.3)" />
-                  <text x="595" y={113 + i * 80} textAnchor="middle" fill="hsl(210, 20%, 92%)" fontSize="13" fontWeight="500">{item}</text>
-                </g>
-              ))}
-
-              {/* Connection arrow */}
-              <line x1="370" y1="300" x2="430" y2="300" stroke="hsl(var(--slide-primary))" strokeWidth="2" markerEnd="url(#arrow)" />
-              <defs>
-                <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="hsl(200, 80%, 55%)" />
-                </marker>
-              </defs>
-              <text x="400" y="290" textAnchor="middle" fill="hsl(215, 12%, 55%)" fontSize="10">Direct Connect</text>
-            </svg>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-primary/20 rounded-lg">
+              <GraduationCap className="w-6 h-6 text-primary" />
+            </div>
+            <p className="text-sm font-bold text-primary uppercase tracking-widest">A Visão Estratégica</p>
           </div>
-          <div className="w-80 space-y-3">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Detalhes da Camada</p>
-            {highlighted ? (
-              <div className="metric-card animate-fade-in">
-                <p className="text-sm font-semibold text-foreground">{layers.find(l => l.id === highlighted)?.label}</p>
-                <p className="text-sm text-muted-foreground mt-2">{layers.find(l => l.id === highlighted)?.desc}</p>
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground italic">Passe o mouse sobre uma camada para ver detalhes</p>
-            )}
-            <div className="metric-card mt-4">
-              <p className="text-xs font-semibold text-slide-warning mb-2">Prós</p>
-              <p className="text-sm text-secondary-foreground">Menor risco inicial, migração gradual, workloads sensíveis permanecem on-prem</p>
-              <p className="text-xs font-semibold text-slide-danger mt-3 mb-2">Contras</p>
-              <p className="text-sm text-secondary-foreground">Mantém custo de datacenter, complexidade de rede híbrida, latência entre ambientes</p>
+          <h2 className="slide-title text-4xl mb-2">Por que usar os 3 modelos juntos?</h2>
+          <p className="slide-subtitle text-lg">
+            A eficiência não está em escolher uma única tecnologia, mas em saber onde investir nosso esforço financeiro e humano para o futuro.
+          </p>
+        </div>
+
+        {/* Quadro Didático - A Analogia */}
+        <div className="bg-muted/40 border border-border rounded-xl p-5 mb-6 relative overflow-hidden">
+          <div className="flex items-start gap-4 relative z-10">
+            <Lightbulb className="w-8 h-8 text-amber-500 shrink-0 mt-1" />
+            <div>
+              <h3 className="text-lg font-bold text-foreground mb-1">A Regra da Reforma (Explicando de forma simples)</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Imagine que você vai reformar uma casa inteira, mas tem tempo e dinheiro limitados.
+                Se você gastar todo o seu orçamento reconstruindo o <strong>"quartinho da bagunça"</strong> (nossos sistemas legados antigos),
+                vai faltar dinheiro para modernizar a <strong>"sala de estar"</strong> (onde nosso cliente faz compras e gera lucro). <br /><br />
+                O segredo dessa nossa arquitetura é aplicar o modelo certo no lugar certo, garantindo que a empresa <strong>fature mais, gaste menos e não saia do ar</strong> nos próximos anos.
+              </p>
             </div>
           </div>
+        </div>
+
+        {/* Projeções Futuras dos 3 Modelos */}
+        <div className="flex-1 grid grid-cols-3 gap-6">
+
+          {/* Coluna 1: Lift & Shift */}
+          <div className="bg-card border-t-4 border-orange-500 rounded-b-xl rounded-t-sm p-6 shadow-sm flex flex-col">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-orange-500/10 rounded-md">
+                <Clock className="w-6 h-6 text-orange-600" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground">Lift & Shift</h3>
+            </div>
+            <p className="text-sm font-semibold text-orange-600 uppercase tracking-wider mb-2">Onde aplicamos?</p>
+            <p className="text-sm text-muted-foreground mb-4">Nos sistemas internos antigos (O "quartinho da bagunça").</p>
+
+            <div className="mt-auto bg-orange-500/5 border border-orange-500/20 rounded-lg p-4">
+              <p className="flex items-center gap-2 text-xs font-bold text-foreground mb-2">
+                <TrendingUp className="w-4 h-4 text-orange-600" /> Projeção Futura
+              </p>
+              <ul className="space-y-2">
+                <li className="text-sm text-secondary-foreground flex items-start gap-2">
+                  <Target className="w-4 h-4 text-orange-500 shrink-0 mt-0.5" />
+                  <span><strong>Sobrevivência Imediata:</strong> Saímos do datacenter físico antes que os equipamentos quebrem, sem perder 1 ano reescrevendo código velho.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Coluna 2: Replatform */}
+          <div className="bg-card border-t-4 border-blue-500 rounded-b-xl rounded-t-sm p-6 shadow-sm flex flex-col">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-blue-500/10 rounded-md">
+                <ShieldCheck className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground">Replatform</h3>
+            </div>
+            <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-2">Onde aplicamos?</p>
+            <p className="text-sm text-muted-foreground mb-4">No coração da empresa, como Bancos de Dados (A "cozinha do restaurante").</p>
+
+            <div className="mt-auto bg-blue-500/5 border border-blue-500/20 rounded-lg p-4">
+              <p className="flex items-center gap-2 text-xs font-bold text-foreground mb-2">
+                <TrendingUp className="w-4 h-4 text-blue-600" /> Projeção Futura
+              </p>
+              <ul className="space-y-2">
+                <li className="text-sm text-secondary-foreground flex items-start gap-2">
+                  <Target className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                  <span><strong>Paz de Espírito:</strong> No futuro, a nuvem conserta, faz backup e atualiza o banco de dados sozinha.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Coluna 3: Refactor */}
+          <div className="bg-card border-t-4 border-emerald-500 rounded-b-xl rounded-t-sm p-6 shadow-sm flex flex-col">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-emerald-500/10 rounded-md">
+                <Zap className="w-6 h-6 text-emerald-600" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground">Refactor</h3>
+            </div>
+            <p className="text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-2">Onde aplicamos?</p>
+            <p className="text-sm text-muted-foreground mb-4">Nos aplicativos de clientes e APIs (A "vitrine da loja").</p>
+
+            <div className="mt-auto bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4">
+              <p className="flex items-center gap-2 text-xs font-bold text-foreground mb-2">
+                <TrendingUp className="w-4 h-4 text-emerald-600" /> Projeção Futura
+              </p>
+              <ul className="space-y-2">
+                <li className="text-sm text-secondary-foreground flex items-start gap-2">
+                  <Scale className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                  <span><strong>Inovação e Escala:</strong> O sistema "estica" sozinho na Black Friday para não cair, e "encolhe" de madrugada para zerar custo.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
         </div>
       </div>
     </ScaledSlide>
